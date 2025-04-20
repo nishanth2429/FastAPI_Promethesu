@@ -39,10 +39,12 @@ spec:
   selector:
     app: fastapi-prometheus
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 80
       targetPort: 8282
-    - protocol: TCP
+    - name: metrics
+      protocol: TCP
       port: 81
       targetPort: 8181
   type: NodePort  # You can also use NodePort if needed
