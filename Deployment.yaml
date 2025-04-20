@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-prometheus-app
+  labels:
+    app: fastapi-prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-prometheus
+  template:
+    metadata:
+      labels:
+        app: fastapi-prometheus
+    spec:
+      containers:
+      - name: fastapi-prometheus
+        image: nishanth00/fastapi-prometheus-app:latest
+        ports:
+        - containerPort: 8282  # Adjust this to match your FastAPI app port
+        - containerPort: 8181  # If you expose metrics separately
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8282
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-prometheus-service
+spec:
+  selector:
+    app: fastapi-prometheus
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8282
+    - protocol: TCP
+      port: 81
+      targetPort: 8181
+  type: LoadBalancer  # You can also use NodePort if needed
