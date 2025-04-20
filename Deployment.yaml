@@ -45,4 +45,4 @@ spec:
     - protocol: TCP
       port: 81
       targetPort: 8181
-  type: LoadBalancer  # You can also use NodePort if needed
+  type: NodePort  # You can also use NodePort if needed
